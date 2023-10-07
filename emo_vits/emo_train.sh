@@ -1,3 +1,4 @@
+# LJSpeech
 # add
 CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/ljs_sem_ave.json -m ljs_emo_add_ave
 CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/ljs_sem_last.json -m ljs_emo_add_last
@@ -26,3 +27,25 @@ CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/
 
 
 # TORCH_DISTRIBUTED_DEBUG=DETAIL CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/tenmin_ljs_sem_ave.json -m test
+
+
+
+
+
+
+# EmoV_DB
+# add
+CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/emovdb_sem_ave.json -m emovdb_emo_add_ave
+CUDA_VISIBLE_DEVICES=2 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/emovdb_sem_last.json -m emovdb_emo_add_last
+CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/emovdb_sem_pca.json -m emovdb_emo_add_pca
+CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/emovdb_sem_eis_word.json -m emovdb_emo_add_eis_word
+CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/emovdb_sem_eis_sentence.json -m emovdb_emo_add_eis_sentence
+
+
+# LibriTTS_filtered
+# add
+CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/librif_sem_ave.json -m librif_emo_add_ave
+# CUDA_VISIBLE_DEVICES=2 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/librif_sem_last.json -m librif_emo_add_last
+# CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/librif_sem_pca.json -m librif_emo_add_pca
+# CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/librif_sem_eis_word.json -m librif_emo_add_eis_word
+# CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/emo_vits/emo_train.py -c /data/vitsGPT/vits/configs/librif_sem_eis_sentence.json -m librif_emo_add_eis_sentence

@@ -75,7 +75,7 @@ def run(rank, n_gpus, hps):
       num_replicas=n_gpus,
       rank=rank,
       shuffle=True)
-  collate_fn = TextAudioCollate()
+  collate_fn = TextAudioCollate(hps.model.sem_dim)
   train_loader = DataLoader(train_dataset, num_workers=0, shuffle=False, pin_memory=True,
       collate_fn=collate_fn, batch_sampler=train_sampler)
   if rank == 0:

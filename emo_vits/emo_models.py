@@ -3,11 +3,13 @@ import math
 import torch
 from torch import nn
 from torch.nn import functional as F
+import re
 
 import commons
 import emo_modules as modules
 import attentions
 import monotonic_align
+import utils
 
 from torch.nn import Conv1d, ConvTranspose1d, AvgPool1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
@@ -141,7 +143,8 @@ class TextEncoder(nn.Module):
       n_heads,
       n_layers,
       kernel_size,
-      p_dropout):
+      p_dropout,
+      sem_dim):
     super().__init__()
     self.n_vocab = n_vocab
     self.out_channels = out_channels
@@ -415,6 +418,7 @@ class SynthesizerTrn(nn.Module):
     gin_channels=0,
     use_sdp=True,
     audiopath=None,
+    sem_dim=5120,
     **kwargs):
 
     super().__init__()
@@ -446,7 +450,8 @@ class SynthesizerTrn(nn.Module):
         n_heads,
         n_layers,
         kernel_size,
-        p_dropout)
+        p_dropout,
+        sem_dim)
     self.dec = Generator(inter_channels, resblock, resblock_kernel_sizes, resblock_dilation_sizes, upsample_rates, upsample_initial_channel, upsample_kernel_sizes, gin_channels=gin_channels)
     self.enc_q = PosteriorEncoder(spec_channels, inter_channels, hidden_channels, 5, 1, 16, gin_channels=gin_channels)
     self.flow = ResidualCouplingBlock(inter_channels, hidden_channels, 5, 1, 4, gin_channels=gin_channels)
@@ -459,8 +464,7 @@ class SynthesizerTrn(nn.Module):
     if n_speakers > 1:
       self.emb_g = nn.Embedding(n_speakers, gin_channels)
 
-    emb_sem_dim = 5120 # adjust this according to the output dimension of gpt
-    self.sem_emb_projection = nn.Linear(emb_sem_dim, gin_channels)
+    self.sem_emb_projection = nn.Linear(sem_dim, gin_channels)
 
   def forward(self, x, x_lengths, y, y_lengths, sid=None, emb_sem=None):
 
@@ -517,8 +521,8 @@ class SynthesizerTrn(nn.Module):
     return o, l_length, attn, ids_slice, x_mask, y_mask, (z, z_p, m_p, logs_p, m_q, logs_q)
 
   def infer(self, x, x_lengths, sid=None, noise_scale=1, length_scale=1, noise_scale_w=1., max_len=None, emb_sem=None):
-    print("in the Synthesizer infer")
-    print(emb_sem)
+    # print("in the Synthesizer infer")
+    # print(emb_sem)
     x, m_p, logs_p, x_mask = self.enc_p(x, x_lengths)
     if emb_sem is not None:
       emb_sem = self.sem_emb_projection(emb_sem)

@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.utils.data
 from collections import defaultdict
+import re
 
 import commons 
 from mel_processing import spectrogram_torch
@@ -332,8 +333,12 @@ class TextAudioLoader(torch.utils.data.Dataset):
 class TextAudioCollate():
     """ Zero-pads model inputs and targets
     """
-    def __init__(self, return_ids=False):
+    def __init__(self, sem_dim=5120, return_ids=False):
         self.return_ids = return_ids
+        # Use regular expression to extract the last 3 or 4 digits before ".pt"
+        # sem_dim_number = re.search(r'(\d{3,4})\.pt$', sem_embeddings_file_path)
+        # self.sem_dim = int(sem_dim_number.group(1))
+        self.sem_dim = sem_dim
 
     def __call__(self, batch):
         """Collate's training batch from normalized text and aduio
@@ -359,7 +364,7 @@ class TextAudioCollate():
         text_padded = torch.LongTensor(len(batch), max_text_len)
         spec_padded = torch.FloatTensor(len(batch), batch[0][1].size(0), max_spec_len)
         wav_padded = torch.FloatTensor(len(batch), 1, max_wav_len)
-        sem_padded = torch.FloatTensor(len(batch), max_sem_len, 5120)
+        sem_padded = torch.FloatTensor(len(batch), max_sem_len, self.sem_dim)
         
         text_padded.zero_()
         spec_padded.zero_()

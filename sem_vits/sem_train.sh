@@ -7,6 +7,8 @@ CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/sem_vits/sem_train.py -c /data/
 
 CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/sem_vits/sem_train.py -c /data/vitsGPT/vits/configs/ljs_sem_mat_text.json -m ljs_sem_mat_text
 CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/sem_vits/sem_train.py -c /data/vitsGPT/vits/configs/ljs_sem_mat_phone.json -m ljs_sem_mat_phone
+CUDA_VISIBLE_DEVICES=0 python /data/vitsGPT/vits/sem_vits/sem_train.py -c /data/vitsGPT/vits/configs/ljs_bert_text.json -m ljs_sem_mat_bert_text
+CUDA_VISIBLE_DEVICES=1 python /data/vitsGPT/vits/sem_vits/sem_train.py -c /data/vitsGPT/vits/configs/ljs_bert_phone.json -m ljs_sem_mat_bert_phone
 
 
 

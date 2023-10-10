@@ -4,6 +4,7 @@ import random
 import numpy as np
 import torch
 import torch.utils.data
+import re
 
 import commons 
 from mel_processing import spectrogram_torch
@@ -26,9 +27,7 @@ class TextAudioLoader(torch.utils.data.Dataset):
         self.hop_length     = hparams.hop_length 
         self.win_length     = hparams.win_length
         self.sampling_rate  = hparams.sampling_rate 
-
         self.cleaned_text = getattr(hparams, "cleaned_text", False)
-
         self.add_blank = hparams.add_blank
         self.min_text_len = getattr(hparams, "min_text_len", 1)
         self.max_text_len = getattr(hparams, "max_text_len", 190)
@@ -130,8 +129,13 @@ class TextAudioLoader(torch.utils.data.Dataset):
 class TextAudioCollate():
     """ Zero-pads model inputs and targets
     """
-    def __init__(self, return_ids=False):
+    def __init__(self, sem_dim=5120, return_ids=False):
         self.return_ids = return_ids
+        # Use regular expression to extract the last 3 or 4 digits before ".pt"
+        # sem_dim_number = re.search(r'(\d{3,4})\.pt$', sem_embeddings_file_path)
+        # self.sem_dim = int(sem_dim_number.group(1))
+        # print(self.sem_dim)
+        self.sem_dim = sem_dim
 
     def __call__(self, batch):
         """Collate's training batch from normalized text and aduio
@@ -160,9 +164,9 @@ class TextAudioCollate():
         wav_padded.zero_()
         if batch[0][3] is None:
             print("emb is none, use zeros")
-            sem_collate = torch.FloatTensor(len(batch), 5120)
+            sem_collate = torch.FloatTensor(len(batch), self.sem_dim)
         else:
-            print("emb is not none!")
+            print("emo_vits: emb is not none!")
             sem_collate = torch.FloatTensor(len(batch), batch[0][3].size(0))
         for i in range(len(ids_sorted_decreasing)):
             row = batch[ids_sorted_decreasing[i]]
@@ -180,7 +184,7 @@ class TextAudioCollate():
             wav_lengths[i] = wav.size(1)
 
             if row[3] is None:
-                sem_collate[i] = torch.zeros(5120,)
+                sem_collate[i] = torch.zeros(self.sem_dim,)
             else:
                 sem_collate[i] = row[3]
 

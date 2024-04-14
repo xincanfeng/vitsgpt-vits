@@ -166,7 +166,7 @@ class TextAudioCollate():
             print("emb is none, use zeros")
             sem_collate = torch.FloatTensor(len(batch), self.sem_dim)
         else:
-            print("emo_vits: emb is not none!")
+            # print("emo_vits: emb is not none!")
             sem_collate = torch.FloatTensor(len(batch), batch[0][3].size(0))
         for i in range(len(ids_sorted_decreasing)):
             row = batch[ids_sorted_decreasing[i]]

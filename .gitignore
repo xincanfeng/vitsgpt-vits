@@ -16,3 +16,4 @@ __pycache__
 build
 *.c
 monotonic_align/monotonic_align
+trashbin.txt
